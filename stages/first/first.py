@@ -6,6 +6,7 @@ from .repair_pdb_to_complex import repair_pdb_to_complex
 from .change_chains_antibodies import change_chains_antibodies
 from .make_complex_pdb import make_complex_pdb
 from .renumber_chains import renumber_chains
+from .erase_temp_files import erase_temp_files
 
 
 def first(antibody, antigen, antigen_pdb, antigen_chain):
@@ -62,5 +63,7 @@ def first(antibody, antigen, antigen_pdb, antigen_chain):
 
     if result == False:
         return False
+    
+    erase_temp_files(row=row, complex_name=f"{antibody}-{antigen_split[2]}")
 
     return True
