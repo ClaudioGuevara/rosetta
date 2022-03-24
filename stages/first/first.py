@@ -3,6 +3,7 @@ import shutil
 
 from .get_antigen_chain import get_antigen_chain
 from .repair_pdb_to_complex import repair_pdb_to_complex
+from .change_chains_antibodies import change_chains_antibodies
 
 
 def first(antibody, antigen, antigen_pdb, antigen_chain):
@@ -36,9 +37,16 @@ def first(antibody, antigen, antigen_pdb, antigen_chain):
 
     if result == False:
         return False
+    
+    row = [complex_folder, antigen_pdb, antigen_chain, "A",
+           f"{antibody}_HC.pdb", "A", "H", f"{antibody}_LC.pdb", "A", "L"]
 
-    result = repair_pdb_to_complex(complex_folder=complex_folder, antibody=antibody,
-                          antigen_chain=antigen_chain, antigen_pdb=antigen_pdb)
+    result = repair_pdb_to_complex(row=row)
+
+    if result == False:
+        return False
+    
+    result = change_chains_antibodies(row=row)
 
     if result == False:
         return False

@@ -13,6 +13,8 @@ def main():
     if os.path.isdir(results_directory):
         shutil.rmtree(results_directory)
         os.mkdir(results_directory)
+    else:
+        os.mkdir(results_directory)        
 
     # Leemos el datasets que resumen todas las interacciones antígeno-anticuerpo.
     df = pd.read_csv(os.path.join(
@@ -24,9 +26,6 @@ def main():
 
         if result == False:
             continue
-
-        print(df["antibody"].iloc[i])
-
 
 if __name__ == "__main__":
     main()
