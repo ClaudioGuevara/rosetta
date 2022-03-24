@@ -53,6 +53,9 @@ def make_folder_and_copy_structures():
         return row
 
 
+def repair_pdbs_to_complex():
+    pass    
+
 def main():
     get_chain_antigen()
     
@@ -60,6 +63,7 @@ def main():
     if len(row_info) == 0:
         return
 
+    repair_pdbs_to_complex() 
 
 if __name__ == "__main__":
     main()
