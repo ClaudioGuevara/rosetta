@@ -5,6 +5,7 @@ from .get_antigen_chain import get_antigen_chain
 from .repair_pdb_to_complex import repair_pdb_to_complex
 from .change_chains_antibodies import change_chains_antibodies
 from .make_complex_pdb import make_complex_pdb
+from .renumber_chains import renumber_chains
 
 
 def first(antibody, antigen, antigen_pdb, antigen_chain):
@@ -53,6 +54,11 @@ def first(antibody, antigen, antigen_pdb, antigen_chain):
         return False
 
     result = make_complex_pdb(row=row, complex_name=f"{antibody}-{antigen_split[2]}")
+
+    if result == False:
+        return False
+
+    result = renumber_chains(row=row, complex_name=f"{antibody}-{antigen_split[2]}")
 
     if result == False:
         return False
