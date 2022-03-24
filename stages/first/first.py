@@ -4,6 +4,7 @@ import shutil
 from .get_antigen_chain import get_antigen_chain
 from .repair_pdb_to_complex import repair_pdb_to_complex
 from .change_chains_antibodies import change_chains_antibodies
+from .make_complex_pdb import make_complex_pdb
 
 
 def first(antibody, antigen, antigen_pdb, antigen_chain):
@@ -47,6 +48,11 @@ def first(antibody, antigen, antigen_pdb, antigen_chain):
         return False
     
     result = change_chains_antibodies(row=row)
+
+    if result == False:
+        return False
+
+    result = make_complex_pdb(row=row, complex_name=f"{antibody}-{antigen_split[2]}")
 
     if result == False:
         return False
