@@ -1,5 +1,6 @@
 import os
 import shutil
+import subprocess
 
 from .get_antigen_chain import get_antigen_chain
 from .repair_pdb_to_complex import repair_pdb_to_complex
@@ -68,5 +69,9 @@ def first(antibody, antigen, antigen_pdb, antigen_chain):
     erase_temp_files(row=row, complex_name=f"{antibody}-{antigen_split[2]}")
 
     make_repack_options_file(row=row, antibody=antibody, antigen=antigen_split[2])
+
+    repack_options = os.path.join(row[0], "repack2.options")
+
+    subprocess.run(["/home/claudio/tesis/rosetta_src_2021.16.61629_bundle/main/source/bin/rosetta_scripts.linuxgccrelease", f"@{repack_options}", "-parser:protocol", "./repack2.xml", "-corrections::restore_talaris_behavior", "True", "-nstruct", "1"])
 
     return True
