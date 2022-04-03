@@ -14,6 +14,7 @@ def main():
         shutil.rmtree(results_directory)
         os.mkdir(results_directory)
     else:
+        print("Hola")
         os.mkdir(results_directory)        
 
     # Leemos el datasets que resumen todas las interacciones antígeno-anticuerpo.
