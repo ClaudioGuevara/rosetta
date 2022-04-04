@@ -1,5 +1,6 @@
 import os
 import shutil
+import random
 
 import pandas as pd
 
@@ -20,11 +21,12 @@ def main():
     df = pd.read_csv(os.path.join(
         os.getcwd(), "./datasets/antigen_antibody_interactions.csv"))
 
-    for i in range(2):
-        result = first(antibody=df["antibody"].iloc[i], antigen=df["antigen"].iloc[i],
-                       antigen_pdb=df["antigen_pdb"].iloc[i], antigen_chain=df["chain"].iloc[i])
+    for i in range(1):
+        result = first(antibody=df["antibody"].iloc[111966], antigen=df["antigen"].iloc[111966],
+                       antigen_pdb=df["antigen_pdb"].iloc[111966], antigen_chain=df["chain"].iloc[111966])
 
         if result == False:
+            print(df["antibody"].iloc[111966] + "-" + df["antigen"].iloc[111966])
             continue
 
 if __name__ == "__main__":
