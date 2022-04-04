@@ -10,6 +10,7 @@ from .renumber_chains import renumber_chains
 from .erase_temp_files import erase_temp_files
 from .make_repack_options_file import make_repack_options_file
 
+from stages.second import second
 
 def first(antibody, antigen, antigen_pdb, antigen_chain):
     antibody_HC_path = os.path.join(
@@ -70,8 +71,10 @@ def first(antibody, antigen, antigen_pdb, antigen_chain):
 
     make_repack_options_file(row=row, antibody=antibody, antigen=antigen_split[2])
 
-    repack_options = os.path.join(row[0], "repack2.options")
+    # repack_options = os.path.join(row[0], "repack2.options")
 
-    subprocess.run(["/home/claudio/tesis/rosetta_src_2021.16.61629_bundle/main/source/bin/rosetta_scripts.linuxgccrelease", f"@{repack_options}", "-parser:protocol", "./repack2.xml", "-corrections::restore_talaris_behavior", "True", "-nstruct", "1"])
+    # subprocess.run(["/home/claudio/tesis/rosetta_src_2021.16.61629_bundle/main/source/bin/rosetta_scripts.linuxgccrelease", f"@{repack_options}", "-parser:protocol", "./repack2.xml", "-corrections::restore_talaris_behavior", "True", "-nstruct", "1"])
+
+    second.main(complex_folder=row[0])
 
     return True
