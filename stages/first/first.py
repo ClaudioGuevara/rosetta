@@ -12,6 +12,7 @@ from .make_repack_options_file import make_repack_options_file
 
 from stages.second import second
 from stages.third import third
+from stages.fourth import fourth
 
 def first(antibody, antigen, antigen_pdb, antigen_chain):
     antibody_HC_path = os.path.join(
@@ -80,5 +81,7 @@ def first(antibody, antigen, antigen_pdb, antigen_chain):
 
     if result == False:
         return False
+    
+    fourth.main(complex_folder=row[0])
 
     return True
