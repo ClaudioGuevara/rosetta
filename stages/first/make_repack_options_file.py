@@ -7,6 +7,3 @@ def make_repack_options_file(row, antibody, antigen):
 
     content = f"-in:file:fullatom\n-out:file:fullatom\n-s {path_pdb}\n-linmem_ig 10\n-ex1\n-ex2\n-use_input_sc\n-score:weights talaris2014.wts\n-out:file:scorefile repack.fasc\n-out:path:all {row[0]}/"
     create_file("repack2.options", content, row[0])
-
-    content = f"-in:file:fullatom\n-out:file:fullatom\n-s {row[0]}/{antibody}-{antigen}_renumbered.pdb\n-linmem_ig 10\n-ex1\n-ex2\n-use_input_sc\n-score:weights talaris2014.wts\n-out:file:scorefile repack.fasc\n-out:path:all {row[0]}/"
-    create_file("repack2_unique.xml", content, row[0])
