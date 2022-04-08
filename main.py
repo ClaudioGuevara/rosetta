@@ -1,6 +1,6 @@
 import os
 import shutil
-import random
+import pymongo
 
 import pandas as pd
 
@@ -11,6 +11,12 @@ def main():
     # Creamos la carpeta donde almacenaremos los complejos.
     results_directory = os.path.join(os.getcwd(), './results')
 
+    myclient = pymongo.MongoClient("mongodb+srv://claudio:claudio123@rosetta-tesis.n97zj.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+
+    mydb = myclient["complex-rosetta"]
+
+    mycol = mydb["complexs"]
+
     if os.path.isdir(results_directory):
         shutil.rmtree(results_directory)
         os.mkdir(results_directory)
@@ -20,13 +26,51 @@ def main():
     # Leemos el datasets que resumen todas las interacciones antígeno-anticuerpo.
     df = pd.read_csv(os.path.join(
         os.getcwd(), "./datasets/antigen_antibody_interactions.csv"))
+        
+    for i in range(5):
+        element = mycol.aggregate([
+            {
+                "$match": {
+                    "executed": False,
+                }
+            },
+            {"$sample": { "size": 1 }}
+        ])
 
-    for i in range(1000):
-        result = first(antibody=df["antibody"].iloc[i], antigen=df["antigen"].iloc[i],
-                       antigen_pdb=df["antigen_pdb"].iloc[i], antigen_chain=df["chain"].iloc[i])
+        antigen = ""
+        antibody = ""
+        for i in element:
+            antigen = i["antigen"]
+            antibody = i["antibody"]
+
+        antibody_df = df["antibody"][(df["antibody"] == antibody) & (df["antigen"] == antigen)].iloc[0]
+        antigen_df = df["antigen"][(df["antibody"] == antibody) & (df["antigen"] == antigen)].iloc[0]
+        antigen_pdb_df = df["antigen_pdb"][(df["antibody"] == antibody) & (df["antigen"] == antigen)].iloc[0]
+        antigen_chain_df = df["chain"][(df["antibody"] == antibody) & (df["antigen"] == antigen)].iloc[0]
+
+        result = first(antibody=antibody_df, antigen=antigen_df, antigen_pdb=antigen_pdb_df, antigen_chain=antigen_chain_df)
 
         if result == False:
+            mycol.update({
+                "antigen": antigen,
+                "antibody": antibody
+            }, {
+                "$set": {
+                    "executed": True,
+                    "success": False
+                }
+            })
             continue
+
+        mycol.update({
+            "antigen": antigen,
+            "antibody": antibody
+        }, {
+            "$set": {
+                "executed": True,
+                "success": True
+            }
+        })
 
 if __name__ == "__main__":
     main()
