@@ -21,7 +21,7 @@ def main():
     df = pd.read_csv(os.path.join(
         os.getcwd(), "./datasets/antigen_antibody_interactions.csv"))
 
-    for i in range(5):
+    for i in range(1000):
         result = first(antibody=df["antibody"].iloc[i], antigen=df["antigen"].iloc[i],
                        antigen_pdb=df["antigen_pdb"].iloc[i], antigen_chain=df["chain"].iloc[i])
 
