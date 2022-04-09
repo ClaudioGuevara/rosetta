@@ -3,7 +3,7 @@
 #### Install Rosetta
 
 1. **Requirements**
-* Have Python-3 installed
+* Python3
 
 2. **Download Rosetta**
 * Go to [Rosetta](https://www.rosettacommons.org/software/license-and-download)
@@ -26,3 +26,26 @@
 * *./scons.py mode=release bin*.
 * Check the a *bin* folder was created
 
+#### Configure Script
+
+1. **Requirements**
+* Anaconda
+* Git
+
+2. **Clone repository**
+* *git clone https://github.com/ClaudioGuevara/rosetta.git*
+
+3. **Create Virtual Environment**
+* *conda create --name rosetta python=3.8.12*
+* *conda activate rosetta*
+
+4. **Install Dependencies**
+* *conda install -c anaconda pymongo*
+* *conda install -c anaconda pandas*
+* *conda install -c schrodinger pymol-bundle*
+* *conda install -c conda-forge pdbfixer*
+* *conda install -c conda-forge dnspython*
+* *conda install -c conda-forge biopython*
+
+5. **Run Script**
+* *python3 main.py*
