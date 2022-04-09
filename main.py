@@ -24,7 +24,7 @@ def main():
     df = pd.read_csv(os.path.join(
         os.getcwd(), "./datasets/antigen_antibody_interactions.csv"))
         
-    for i in range(100):
+    for i in range(1000):
         element = mycol.aggregate([
             {
                 "$match": {
@@ -40,9 +40,6 @@ def main():
         for i in element:
             antigen = i["antigen"]
             antibody = i["antibody"]
-        
-        print(antigen)
-        print(antibody)
 
         antibody_df = df["antibody"][(df["antibody"] == antibody) & (df["antigen"] == antigen)].iloc[0]
         antigen_df = df["antigen"][(df["antibody"] == antibody) & (df["antigen"] == antigen)].iloc[0]
