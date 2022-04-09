@@ -34,57 +34,63 @@ def first(antibody, antigen, antigen_pdb, antigen_chain):
             os.getcwd(), "results", f"{antibody}-{antigen_split[2]}")
         os.mkdir(complex_folder)
 
-    shutil.copyfile(antibody_HC_path, os.path.join(
-        complex_folder, f"{antibody}_HC.pdb"))
-    shutil.copyfile(antibody_LC_path, os.path.join(
-        complex_folder, f"{antibody}_LC.pdb"))
-    shutil.copyfile(antigen_pdb_path, os.path.join(
-        complex_folder, f"{antigen_pdb}"))
+        shutil.copyfile(antibody_HC_path, os.path.join(
+            complex_folder, f"{antibody}_HC.pdb"))
+        shutil.copyfile(antibody_LC_path, os.path.join(
+            complex_folder, f"{antibody}_LC.pdb"))
+        shutil.copyfile(antigen_pdb_path, os.path.join(
+            complex_folder, f"{antigen_pdb}"))
 
-    result = get_antigen_chain(
-        antigen_pdb=antigen_pdb, antigen_chain=antigen_chain, complex_folder=complex_folder)
+        result = get_antigen_chain(
+            antigen_pdb=antigen_pdb, antigen_chain=antigen_chain, complex_folder=complex_folder)
 
-    if result == False:
+        if result == False:
+            return False
+        
+        row = [complex_folder, antigen_pdb, antigen_chain, "A",
+            f"{antibody}_HC.pdb", "A", "H", f"{antibody}_LC.pdb", "A", "L"]
+
+        result = repair_pdb_to_complex(row=row)
+
+        if result == False:
+            return False
+        
+        result = change_chains_antibodies(row=row)
+
+        if result == False:
+            return False
+
+        result = make_complex_pdb(row=row, complex_name=f"{antibody}-{antigen_split[2]}")
+
+        if result == False:
+            return False
+
+        result = renumber_chains(row=row, complex_name=f"{antibody}-{antigen_split[2]}")
+
+        if result == False:
+            return False
+        
+        erase_temp_files(row=row, complex_name=f"{antibody}-{antigen_split[2]}")
+
+        make_repack_options_file(row=row, antibody=antibody, antigen=antigen_split[2])
+
+        # STAGE TWO
+        second.main(complex_folder=row[0])
+
+        # STAGE THREE
+        result = third.main(complex_folder=row[0], antibody=antibody, antigen=antigen_split[2])
+
+        if result == False:
+            return False
+        
+        fourth.main(complex_folder=row[0])
+
+        result = fifth.main(complex_folder=row[0])
+
+        if result == False:
+            return False
+    else:
         return False
-    
-    row = [complex_folder, antigen_pdb, antigen_chain, "A",
-           f"{antibody}_HC.pdb", "A", "H", f"{antibody}_LC.pdb", "A", "L"]
 
-    result = repair_pdb_to_complex(row=row)
-
-    if result == False:
-        return False
-    
-    result = change_chains_antibodies(row=row)
-
-    if result == False:
-        return False
-
-    result = make_complex_pdb(row=row, complex_name=f"{antibody}-{antigen_split[2]}")
-
-    if result == False:
-        return False
-
-    result = renumber_chains(row=row, complex_name=f"{antibody}-{antigen_split[2]}")
-
-    if result == False:
-        return False
-    
-    erase_temp_files(row=row, complex_name=f"{antibody}-{antigen_split[2]}")
-
-    make_repack_options_file(row=row, antibody=antibody, antigen=antigen_split[2])
-
-    # STAGE TWO
-    second.main(complex_folder=row[0])
-
-    # STAGE THREE
-    result = third.main(complex_folder=row[0], antibody=antibody, antigen=antigen_split[2])
-
-    if result == False:
-        return False
-    
-    fourth.main(complex_folder=row[0])
-
-    fifth.main(complex_folder=row[0])
 
     return True

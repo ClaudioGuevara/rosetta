@@ -17,17 +17,14 @@ def main():
 
     mycol = mydb["complexs"]
 
-    if os.path.isdir(results_directory):
-        shutil.rmtree(results_directory)
-        os.mkdir(results_directory)
-    else:
+    if not os.path.isdir(results_directory):
         os.mkdir(results_directory)        
 
     # Leemos el datasets que resumen todas las interacciones antígeno-anticuerpo.
     df = pd.read_csv(os.path.join(
         os.getcwd(), "./datasets/antigen_antibody_interactions.csv"))
         
-    for i in range(5):
+    for i in range(100):
         element = mycol.aggregate([
             {
                 "$match": {
@@ -39,9 +36,13 @@ def main():
 
         antigen = ""
         antibody = ""
+
         for i in element:
             antigen = i["antigen"]
             antibody = i["antibody"]
+        
+        print(antigen)
+        print(antibody)
 
         antibody_df = df["antibody"][(df["antibody"] == antibody) & (df["antigen"] == antigen)].iloc[0]
         antigen_df = df["antigen"][(df["antibody"] == antibody) & (df["antigen"] == antigen)].iloc[0]
@@ -51,7 +52,7 @@ def main():
         result = first(antibody=antibody_df, antigen=antigen_df, antigen_pdb=antigen_pdb_df, antigen_chain=antigen_chain_df)
 
         if result == False:
-            mycol.update({
+            mycol.update_one({
                 "antigen": antigen,
                 "antibody": antibody
             }, {
@@ -62,7 +63,7 @@ def main():
             })
             continue
 
-        mycol.update({
+        mycol.update_one({
             "antigen": antigen,
             "antibody": antibody
         }, {

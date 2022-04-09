@@ -3,7 +3,14 @@ import re
 
 def main(complex_folder):
     docking_selected=""
+
+    path_docking = os.path.join(complex_folder, "docking2.fasc")
+
+    if not os.path.isfile(path_docking):
+        return False
+
     scoring_file_docking = os.path.join(complex_folder, "docking2.fasc")
+    
     file_results = open(scoring_file_docking, "r").read().splitlines()[2:]
     score = 0
     i_sc = -5
