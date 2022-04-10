@@ -3,7 +3,7 @@ import re
 
 from utils.create_file import create_file
 
-def process_results_repack(complex_folder, antibody, antigen):
+def process_results_repack(complex_folder, antibody, antigen, rosetta_path):
     structure_selected=""
     file_results=open(os.path.join(complex_folder, "repack.fasc"), "r").read().splitlines()[2:]
     score=0
@@ -18,7 +18,8 @@ def process_results_repack(complex_folder, antibody, antigen):
     if not structure_selected:
         return False
     else:
-        rosetta_database_direct = "/home/claudio/tesis/rosetta_src_2021.16.61629_bundle/main/database/"
+        #rosetta_database_direct = f"/home/claudio/tesis/rosetta_src_2021.16.61629_bundle/main/database/"
+        rosetta_database_direct = f"{rosetta_path}/database/"
 
         content = f"-database {rosetta_database_direct}\n-docking						# the docking option group\n	-partners HL_A					# set rigid body docking partners\n	-dock_pert 3 8					# set coarse perturbation parameters (degrees and angstroms)\n	-dock_mcm_trans_magnitude 0.1			# refinement translational perturbation\n	-dock_mcm_rot_magnitude 5.0			# refinement rotational perturbation\n-s {structure_selected}.pdb\n-run:max_retry_job 50					# if the mover fails, retry 50 times\n-use_input_sc						# add the side chains from the input pdb to the rotamer library\n-ex1							# increase rotamer bins to include mean +- 1 standard deviation\n-ex2                                                    # increase rotamer bins to include mean +- 2 standard deviations\n-out:path:all ../results/{antibody}-{antigen}/\n-out							# out option group\n	-file						# out:file option group\n		-scorefile docking2.fasc			# the name of the model score file\n-score:weights talaris2014.wts	# Set talaris2014 as default score function"
         create_file("docking_new.options", content, complex_folder)

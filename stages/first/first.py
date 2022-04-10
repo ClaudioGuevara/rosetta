@@ -15,7 +15,7 @@ from stages.third import third
 from stages.fourth import fourth
 from stages.fifth import fifth
 
-def first(antibody, antigen, antigen_pdb, antigen_chain):
+def first(antibody, antigen, antigen_pdb, antigen_chain, rosetta_path):
     antibody_HC_path = os.path.join(
         os.getcwd(), "antibodies", f"{antibody}_HC.pdb")
     antibody_LC_path = os.path.join(
@@ -75,15 +75,15 @@ def first(antibody, antigen, antigen_pdb, antigen_chain):
         make_repack_options_file(row=row, antibody=antibody, antigen=antigen_split[2])
 
         # STAGE TWO
-        second.main(complex_folder=row[0])
+        second.main(complex_folder=row[0], rosetta_path=rosetta_path)
 
         # STAGE THREE
-        result = third.main(complex_folder=row[0], antibody=antibody, antigen=antigen_split[2])
+        result = third.main(complex_folder=row[0], antibody=antibody, antigen=antigen_split[2], rosetta_path=rosetta_path)
 
         if result == False:
             return False
         
-        fourth.main(complex_folder=row[0])
+        fourth.main(complex_folder=row[0], rosetta_path=rosetta_path)
 
         result = fifth.main(complex_folder=row[0])
 
